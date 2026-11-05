@@ -4,6 +4,8 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include "qbImage.hpp"
+#include "camera.hpp"
+#include "objsphere.hpp"
 
 namespace qbRT
 
@@ -20,6 +22,10 @@ namespace qbRT
 
         // private members
         private:
+            //The camera that we will use.
+            qbRT::Camera m_camera;
+            // A unit sphere on the origin for testing
+            qbRT::ObjSphere m_testSphere;
     };
 }
 

@@ -33,7 +33,7 @@ namespace qbRT
             double GetAspect();
 
             // Function to generate a ray from the camera through a pixel
-            Ray GenerateRay(float proScreenX, float proScreenY);
+            bool GenerateRay(float proScreenX, float proScreenY, qbRT::Ray &cameraRay);
 
             // Function to update the camera geometry.
             void UpdateCameraGeometry();

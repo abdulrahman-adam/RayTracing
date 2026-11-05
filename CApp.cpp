@@ -22,30 +22,15 @@ bool CApp::OnInit()
         pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
         // Initialize the qbImage instance.
         m_image.Initialize(1280, 720, pRenderer);
-
-        // Test the camera class
-        qbRT::Camera testCamera;
-        testCamera.SetPosition(qbVector<double>(std::vector<double>{0.0, 0.0, 0.0}));
-        testCamera.SetLookAt(qbVector<double>(std::vector<double>{0.0, 2.0, 0.0}));
-        testCamera.SetUp(qbVector<double>(std::vector<double>{0.0, 0.0, 1.0}));
-        testCamera.SetLength(1.0);
-        testCamera.SetHorzSize(1.0);
-        testCamera.SetAspect(1.0);
-        testCamera.UpdateCameraGeometry();
-
-        //Get the screen center and U,V vectors and display
-        auto screenCenter = testCamera.GetScreenCenter();
-        auto screenU = testCamera.GetU();
-        auto screenV = testCamera.GetV();
-
-        // Display the terminal
-        std::cout << "Camera Screen Center: " << std::endl;
-        PrintVector(screenCenter);
-        std::cout << "\nCamera U vector:" << std::endl;
-        PrintVector(screenU);
-        std::cout << "\nCamera V vector:" <<std::endl;
-        PrintVector(screenV);
-    
+        // Set the background color to white.
+        SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
+        SDL_RenderClear(pRenderer);
+        // Render the scene 
+        m_scene.Render(m_image);
+        // Display the image
+        m_image.Display();
+        //Show the result
+        SDL_RenderPresent(pRenderer);
     }
     else 
     {
@@ -95,17 +80,17 @@ void CApp::OnLoop()
 void CApp::OnRender()
 {
     // Set the background to white
-    SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
-    SDL_RenderClear(pRenderer);
+    //SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
+    //SDL_RenderClear(pRenderer);
 
     // Render the scene
-    m_scene.Render(m_image);
+    //m_scene.Render(m_image);
 
     // Display the image.
-    m_image.Display();
+    //m_image.Display();
 
     // Show the result
-    SDL_RenderPresent(pRenderer);
+    //SDL_RenderPresent(pRenderer);
 }
 
 void CApp::OnExit()

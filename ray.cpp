@@ -1,5 +1,15 @@
 #include "ray.hpp"
 
+
+// The default constructor
+qbRT::Ray::Ray()
+{
+    // Initialize the points and direction vector to zero vectors
+    m_point1 = qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}};
+    m_point2 = qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}};
+    m_lab = m_point2 - m_point1;
+}
+
 qbRT::Ray::Ray(const qbVector<double> &point1, const qbVector<double> &point2)
 {
     m_point1 = point1;

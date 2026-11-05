@@ -125,13 +125,16 @@ void qbRT::Camera::UpdateCameraGeometry()
 }
 
 // Function return array from the center of camera
-qbRT::Ray qbRT::Camera::GenerateRay(float proScreenX, float proScreenY)
+bool qbRT::Camera::GenerateRay(float proScreenX, float proScreenY, qbRT::Ray &cameraRay)
 {
     // Compute the location of the screen point in world coordinates.
     qbVector<double> screenWorldPart1 = m_projectionScreenCenter + (m_projectionScreenU * proScreenX);
     qbVector<double> screenWorldCoordinate = screenWorldPart1 + (m_projectionScreenV * proScreenY);
     
     // Use this point along with the camera position to compute the ray.
-    return qbRT::Ray(m_cameraPosition, screenWorldCoordinate); 
+    cameraRay.m_point1 = m_cameraPosition;
+    cameraRay.m_point2 = screenWorldCoordinate;
+    cameraRay.m_lab = screenWorldCoordinate - m_cameraPosition;
+    return true; 
 
 }

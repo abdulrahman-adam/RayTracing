@@ -47,6 +47,18 @@ void qbImage::SetPixel(const int x, const int y, const double red, const double 
     m_bChannel.at(x).at(y) = blue;
 }
 
+// Function to return the dimentions of the image
+int qbImage::GetXSize()
+{
+    return m_xSize;
+}
+
+int qbImage::GetYSize()
+{
+    return m_ySize;
+}
+
+// Function to generate the display
 // Function to display the image
 void qbImage::Display()
 {

@@ -23,6 +23,10 @@ class qbImage
         // Function to return the image of display
         void Display();
 
+        // Function to return the dimentions of the image
+        int GetXSize();
+        int GetYSize();
+
     private:
         // Function return the view of colors
         Uint32 ConvertColor(const double red, const double green, const double blue);

@@ -1,4 +1,5 @@
 #include "CApp.h"
+#include "./qbLinAlg/qbVector.h"
 
 // The constructor (default)
 CApp::CApp()
@@ -21,17 +22,30 @@ bool CApp::OnInit()
         pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
         // Initialize the qbImage instance.
         m_image.Initialize(1280, 720, pRenderer);
-        // Create some color variations.
-        for(int x = 0; x < 1280; x++)
-        {
-            for(int y = 0; y < 720; y++)
-            {
-                double red = (static_cast<double>(x) / 1280.0) * 255.0;
-                double green = (static_cast<double>(y) / 720.0) * 255.0;
-                double blue = 0.5 * 255.0;
-                m_image.SetPixel(x, y, red, green, 0.0);
-            }
-        }
+
+        // Test the camera class
+        qbRT::Camera testCamera;
+        testCamera.SetPosition(qbVector<double>(std::vector<double>{0.0, 0.0, 0.0}));
+        testCamera.SetLookAt(qbVector<double>(std::vector<double>{0.0, 2.0, 0.0}));
+        testCamera.SetUp(qbVector<double>(std::vector<double>{0.0, 0.0, 1.0}));
+        testCamera.SetLength(1.0);
+        testCamera.SetHorzSize(1.0);
+        testCamera.SetAspect(1.0);
+        testCamera.UpdateCameraGeometry();
+
+        //Get the screen center and U,V vectors and display
+        auto screenCenter = testCamera.GetScreenCenter();
+        auto screenU = testCamera.GetU();
+        auto screenV = testCamera.GetV();
+
+        // Display the terminal
+        std::cout << "Camera Screen Center: " << std::endl;
+        PrintVector(screenCenter);
+        std::cout << "\nCamera U vector:" << std::endl;
+        PrintVector(screenU);
+        std::cout << "\nCamera V vector:" <<std::endl;
+        PrintVector(screenV);
+    
     }
     else 
     {
@@ -84,6 +98,9 @@ void CApp::OnRender()
     SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
     SDL_RenderClear(pRenderer);
 
+    // Render the scene
+    m_scene.Render(m_image);
+
     // Display the image.
     m_image.Display();
 
@@ -99,6 +116,17 @@ void CApp::OnExit()
     pRenderer = NULL;
     pWindow = NULL;
     SDL_Quit();
+}
+
+
+// PRIVATE FUNCTIONS.
+void CApp::PrintVector(const qbVector<double> &inputVector)
+{
+    int nRows = inputVector.GetNumDims();
+    for(int row = 0; row < nRows; row++)
+    {
+        std::cout << std::fixed << std::setprecision(3) << inputVector.GetElement(row) << std::endl;
+    }
 }
 
 

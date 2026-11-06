@@ -1,5 +1,13 @@
 // scene.cpp
+
+
+/**
+The scene class implementation . A class to handle information about the scene and rendering to an image.
+ */
+
+
 #include "scene.hpp"
+#include <iostream>
 
 // The constructor
 qbRT::Scene::Scene()
@@ -12,6 +20,13 @@ qbRT::Scene::Scene()
     m_camera.SetHorzSize(0.25);
     m_camera.SetAspect  (16.0 / 9.0);
     m_camera.UpdateCameraGeometry();
+
+    //Construct a test sphere.
+    m_objectList.push_back(std::make_shared<qbRT::ObjSphere>(qbRT::ObjSphere()));
+    // Construct a test light.
+    m_lightList.push_back(std::make_shared<qbRT::PointLight>(qbRT::PointLight()));
+    m_lightList.at(0) -> m_location = qbVector<double>{std::vector<double>{5.0, -10.0, 5.0}};
+    m_lightList.at(0) -> m_color = qbVector<double> {std::vector<double>{255.0, 255.0, 255.0}};
 }
 
 // FUnction to perform the rendering.
@@ -39,11 +54,23 @@ bool qbRT::Scene::Render(qbImage &outputImage)
 
             // Generate the for this pixel.
             m_camera.GenerateRay(normX, normY, cameraRay);
-            // Test if we have a valid intersection
-            bool validInt = m_testSphere.TestIntersections(cameraRay, intPoint, localNormal, localColor);
-            // If we have a valid intersection, change pixel to red.
+
+            // Test for intersections with all objects in the scene.
+            for (auto currentObject : m_objectList)
+            {
+                bool validInt = currentObject -> TestIntersections(cameraRay, intPoint, localNormal, localColor);
+                 // If we have a valid intersection, change pixel to red.
             if(validInt)
             {
+                // Compute intensity of illumination
+                double intensity;
+                qbVector<double> color {3};
+                bool validIllum = false;
+                for (auto currentLight : m_lightList)
+                {
+                    validIllum = currentLight -> ComputeIllumination(intPoint, localNormal, m_objectList, currentObject, color, intensity);
+
+                }
                 // Compute the distance from the camera to the intersection point.
                 double dist = (intPoint - cameraRay.m_point1).norm();
                 if(dist > maxDist)
@@ -55,13 +82,23 @@ bool qbRT::Scene::Render(qbImage &outputImage)
                 {
                     minDist = dist;
                 }
-                outputImage.SetPixel(x, y, 255.0- ((dist - 9.0) / 0.94605) * 255.0, 0.0, 0.0);
+                //outputImage.SetPixel(x, y, 0.0, 0.0, 255.0 - ((dist - 9.0) / 0.94605) * 255.0);
+                if (validIllum)
+                {
+                    outputImage.SetPixel(x, y, 255.0 * intensity, 0.0, 0.0);
+                }
+                else
+                {
+                    outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
+                }
 
             }
             else
             {
                 outputImage.SetPixel(x, y, 0.0, 0.0, 0.0);
             }
+            }
+           
         }
     }
 

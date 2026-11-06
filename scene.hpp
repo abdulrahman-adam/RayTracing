@@ -1,11 +1,24 @@
+// scene.hpp
+
+/*
+The scene class definition . A class to handle information about the scene and rendering
+to an image.
+
+*/
+
+
+
+
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <memory>
 #include <vector>
 #include <SDL2/SDL.h>
 #include "qbImage.hpp"
 #include "camera.hpp"
 #include "objsphere.hpp"
+#include "pointlight.hpp"
 
 namespace qbRT
 
@@ -24,8 +37,11 @@ namespace qbRT
         private:
             //The camera that we will use.
             qbRT::Camera m_camera;
-            // A unit sphere on the origin for testing
-            qbRT::ObjSphere m_testSphere;
+            //The list of the objects in the scene
+            std::vector<std::shared_ptr<qbRT::ObjectBase>> m_objectList;
+
+            // The list of the lights in the scene
+            std::vector<std::shared_ptr<qbRT::LightBase>> m_lightList;
     };
 }
 

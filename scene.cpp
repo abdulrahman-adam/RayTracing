@@ -14,7 +14,7 @@ qbRT::Scene::Scene()
 
 {
     //Configure the camera
-    m_camera.SetPosition( qbVector<double>{std::vector<double>{0.0, -10.0, 0.0}} );
+    m_camera.SetPosition( qbVector<double>{std::vector<double>{0.0, -10.0, -1.0}} );
     m_camera.SetLookAt  ( qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}} );
     m_camera.SetUp      ( qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}} );
     m_camera.SetHorzSize(0.25);
@@ -22,9 +22,14 @@ qbRT::Scene::Scene()
     m_camera.UpdateCameraGeometry();
 
     //Construct a test sphere.
-    m_objectList.push_back(std::make_shared<qbRT::ObjSphere>(qbRT::ObjSphere()));
-    m_objectList.push_back(std::make_shared<qbRT::ObjSphere>(qbRT::ObjSphere()));
-    m_objectList.push_back(std::make_shared<qbRT::ObjSphere>(qbRT::ObjSphere()));
+    //m_objectList.push_back(std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere()));
+    //m_objectList.push_back(std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere()));
+    //m_objectList.push_back(std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere()));
+
+    // Construct a test plane
+    m_objectList.push_back(std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane()));
+    m_objectList.at(0) -> m_baseColor = qbVector<double>{std::vector<double> {128.0, 128.0, 128.0}};
+    
 
     // Modify the Sphere
     qbRT::GTform testMatrix1, testMatrix2, testMatrix3;
@@ -40,14 +45,14 @@ qbRT::Scene::Scene()
                               qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
                               qbVector<double>{std::vector<double>{0.75, 0.75, 0.75}});
 
-    m_objectList.at(0) -> SetTransformMatrix(testMatrix1);
-    m_objectList.at(1) -> SetTransformMatrix(testMatrix2);
-    m_objectList.at(2) -> SetTransformMatrix(testMatrix3);
-
-    // Modify the color
-    m_objectList.at(0) -> m_baseColor = qbVector<double>{std::vector<double>{64.0, 128.0, 200.0}};
-    m_objectList.at(1) -> m_baseColor = qbVector<double>{std::vector<double>{255.0, 128.0, 0.0}};
-    m_objectList.at(2) -> m_baseColor = qbVector<double>{std::vector<double>{255.0, 200.0, 0.0}};
+    //m_objectList.at(0) -> SetTransformMatrix(testMatrix1);
+    //m_objectList.at(1) -> SetTransformMatrix(testMatrix2);
+    //m_objectList.at(2) -> SetTransformMatrix(testMatrix3);
+//
+    //// Modify the color
+    //m_objectList.at(0) -> m_baseColor = qbVector<double>{std::vector<double>{64.0, 128.0, 200.0}};
+    //m_objectList.at(1) -> m_baseColor = qbVector<double>{std::vector<double>{255.0, 128.0, 0.0}};
+    //m_objectList.at(2) -> m_baseColor = qbVector<double>{std::vector<double>{255.0, 200.0, 0.0}};
 
 
 

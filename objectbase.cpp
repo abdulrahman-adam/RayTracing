@@ -15,6 +15,10 @@ qbRT::ObjectBase::~ObjectBase()
 
 }
 
+void qbRT::ObjectBase::SetTransformMatrix(const qbRT::GTform &transformMatrix)
+{
+    m_transformMatrix = transformMatrix;
+}
 // Funcction to test for intersections
 bool qbRT::ObjectBase::TestIntersections(const Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor)
 {

@@ -110,9 +110,10 @@ void qbImage::InitTexture()
         bmask = 0x0000ff00;
         amask = 0x000000ff;
     #else
-        rmask = 0x000000ff;
+        // ARGB8888 : must match the packing used in ConvertColor.
+        rmask = 0x00ff0000;
         gmask = 0x0000ff00;
-        bmask = 0x00ff0000;
+        bmask = 0x000000ff;
         amask = 0xff000000;
     #endif
 

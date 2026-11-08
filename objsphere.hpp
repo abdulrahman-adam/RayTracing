@@ -4,7 +4,7 @@
 #define OBJSPHERE_H
 
 #include "objectbase.hpp"
-
+#include "gtfm.hpp"
 namespace qbRT
 {
     // heritage of Objectbase
@@ -20,7 +20,7 @@ namespace qbRT
         virtual ~ObjSphere() override;
 
         // Override the function to test for intersections
-        virtual bool TestIntersections(const qbRT::Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor);
+        virtual bool TestIntersections(const qbRT::Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor) override;
 
         // Public member variables
     private:

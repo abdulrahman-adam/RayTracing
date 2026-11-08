@@ -1,4 +1,8 @@
 #include "gtfm.hpp"
+#include <cmath>
+#include <iostream>
+#include <iomanip>
+#include <stdexcept>
 
 // Constructor and destructor
 qbRT::GTform::GTform()
@@ -22,28 +26,28 @@ qbRT::GTform::GTform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck)
     {
         throw std::invalid_argument("Cannot construct GTform, inputs are not all 4x4");
     }
-    m_fwdfm = fwd;
-    m_bckfm = bck;
+    m_fwdtfm = fwd;
+    m_bcktfm = bck;
 }
 
 // Function to set the transform
-void qbRT::GTform::SetYransform( const qbVector<double> &translation,
-                                 const qbVector<double> &rotation
+void qbRT::GTform::SetTransform( const qbVector<double> &translation,
+                                 const qbVector<double> &rotation,
                                  const qbVector<double> &scale)
 {
     //Define a matrix for each component of the transform.
-    qbMartix2<double> translationMatrix {4, 4};
-    qbMartix2<double> rotationMatrixX   {4, 4};
-    qbMartix2<double> rotationMatrixY   {4, 4};
-    qbMartix2<double> rotationMatrixZ   {4, 4};
-    qbMartix2<double> scaleMatrix       {4, 4};
+    qbMatrix2<double> translationMatrix {4, 4};
+    qbMatrix2<double> rotationMatrixX   {4, 4};
+    qbMatrix2<double> rotationMatrixY   {4, 4};
+    qbMatrix2<double> rotationMatrixZ   {4, 4};
+    qbMatrix2<double> scaleMatrix       {4, 4};
 
     // Set these to identity
-    translationMatrix.SetIdentiry();
-    rotationMatrixX.SetIdentity();
-    rotationMatrixY.SetIdentity();
-    rotationMatrixZ.SetIdentity();
-    scaleMatrixZ.SetIdentity();
+    translationMatrix.SetToIdentity();
+    rotationMatrixX.SetToIdentity();
+    rotationMatrixY.SetToIdentity();
+    rotationMatrixZ.SetToIdentity();
+    scaleMatrix.SetToIdentity();
 
     // Populate these with the appropriate values.
     // First the translation matrix.
@@ -73,16 +77,15 @@ void qbRT::GTform::SetYransform( const qbVector<double> &translation,
     scaleMatrix.SetElement(2, 2, scale.GetElement(2));
 
     //Combine to give the final forward transform matrix.
-    m_fwdfm = translationMatrix *
-              scaleMatrix *
-              rotationMatrixX *
-              rotationMatrixY *
-              rotationMatrixZ;
+    m_fwdtfm = translationMatrix *
+               scaleMatrix *
+               rotationMatrixX *
+               rotationMatrixY *
+               rotationMatrixZ;
 
-    // Compute the backword transform
+    // Compute the backward transform
     m_bcktfm = m_fwdtfm;
-    m_bckfm.Inverse();
-
+    m_bcktfm.Inverse();
 }
 
 // Function to return the transform matrices.
@@ -90,71 +93,74 @@ qbMatrix2<double> qbRT::GTform::GetForward()
 {
     return m_fwdtfm;
 }
-qbMatrix2<double> qbRT::GTform::GetBackword()
+
+qbMatrix2<double> qbRT::GTform::GetBackward()
 {
     return m_bcktfm;
 }
 
-// Function to apply the transform
-qbRT::Ray::qbRT::GTform::Apply(const qtRT::Ray &inputRay, bool dirFlag)
+// Function to apply the transform to a ray
+qbRT::Ray qbRT::GTform::Apply(const qbRT::Ray &inputRay, bool dirFlag)
 {
-    // Create un output object
+    // Create an output object
     qbRT::Ray outputRay;
     if (dirFlag)
     {
         // Apply the forward transform
-        outputRay.m_point1 = this -> Apply(inputRay.m_point1, qbRT::FWDTFM);
-        outputRay.m_point2 = this -> Apply(inputRay.m_point2, qbRT::FWDTFM);
+        outputRay.m_point1 = this -> Apply(inputRay.m_point1, qbRT::FWDTFORM);
+        outputRay.m_point2 = this -> Apply(inputRay.m_point2, qbRT::FWDTFORM);
         outputRay.m_lab = outputRay.m_point2 - outputRay.m_point1;
     }
     else
     {
-        //Apply the backword transform
-        outputRay.m_point1 = this -> Apply(inputRay.m_point1, qbRT::BCKTFM);
-        outputRay.m_point2 = this -> Apply(inputRay.m_point2, qbRT::BCKTFM);
-        outputRay.m_lab =  outputRay.m_point2 - outputRay.m_point1;
+        //Apply the backward transform
+        outputRay.m_point1 = this -> Apply(inputRay.m_point1, qbRT::BCKTFORM);
+        outputRay.m_point2 = this -> Apply(inputRay.m_point2, qbRT::BCKTFORM);
+        outputRay.m_lab = outputRay.m_point2 - outputRay.m_point1;
     }
     return outputRay;
 }
 
-qbVactor<double> qbRT::GTform::Apply(const qbVector<double> &inputVector, bool dirFlag)
+// Function to apply the transform to a vector
+qbVector<double> qbRT::GTform::Apply(const qbVector<double> &inputVector, bool dirFlag)
 {
-    //Convert inputVector to a 4.element vector.
+    //Convert inputVector to a 4-element vector.
     std::vector<double> tempData { inputVector.GetElement(0),
                                    inputVector.GetElement(1),
                                    inputVector.GetElement(2),
                                    1.0 };
-    qbVector<double> tempVector {tempVector};
+    qbVector<double> tempVector {tempData};
 
     // Create a vector for the result
     qbVector<double> resultVector;
 
     if (dirFlag)
     {
-        // Apply the forward trasform
+        // Apply the forward transform
         resultVector = m_fwdtfm * tempVector;
     }
     else
     {
-        // Applay the backword transform
+        // Apply the backward transform
         resultVector = m_bcktfm * tempVector;
     }
 
-    // Reform the output as a 3.element vector.
-    qbVector<double> {std::vector<double> { resultVector.GetElement(0),
-                                            resultVector.GetElement(1),
-                                            resultVector.GetElement(2) }};
+    // Reform the output as a 3-element vector.
+    qbVector<double> outputVector {std::vector<double> { resultVector.GetElement(0),
+                                                         resultVector.GetElement(1),
+                                                         resultVector.GetElement(2) }};
     return outputVector;
 }
 
 // Overload operators
 namespace qbRT
 {
-    qbRT::GTform operator* (const qbRT::GTform &rhs, const qbRT::GTform &rhs)
+    qbRT::GTform operator* (const qbRT::GTform &lhs, const qbRT::GTform &rhs)
     {
-        // Form the project of the tow forward transform
-        qbMatrix2<double> fwdResult = lhs.m_fwdtfm * rhs.m_fwdfm;
-        // Compute the bckward transform as the invers of the forward transform.
+        // Form the product of the two forward transforms
+        qbMatrix2<double> fwdResult = lhs.m_fwdtfm * rhs.m_fwdtfm;
+
+        // Compute the backward transform as the inverse of the forward transform.
         qbMatrix2<double> bckResult = fwdResult;
         bckResult.Inverse();
 
@@ -166,10 +172,10 @@ namespace qbRT
 }
 
 // Overload the assignment operator.
-qbRT::GTform qbRT::GTform::operator = (const qbRT::GTform &rhs)
+qbRT::GTform qbRT::GTform::operator= (const qbRT::GTform &rhs)
 {
     // Make sure we are not assigning to our self.
-    if (this != rhs)
+    if (this != &rhs)
     {
         m_fwdtfm = rhs.m_fwdtfm;
         m_bcktfm = rhs.m_bcktfm;
@@ -178,16 +184,16 @@ qbRT::GTform qbRT::GTform::operator = (const qbRT::GTform &rhs)
     return *this;
 }
 
-// Function to print the transfrom matrix to STDOUT.
-void qbRT::GTfrom::PrintMatrix(bool dirFlag)
+// Function to print the transform matrix to STDOUT.
+void qbRT::GTform::PrintMatrix(bool dirFlag)
 {
- if (dirFlag)
+    if (dirFlag)
     {
-        print(m_fwdtfm);
+        Print(m_fwdtfm);
     }
- else
+    else
     {
-        print(m_bcktfm);
+        Print(m_bcktfm);
     }
 }
 
@@ -198,21 +204,20 @@ void qbRT::GTform::Print(const qbMatrix2<double> &matrix)
 
     for (int row = 0; row < nRows; ++row)
     {
-        for (int col = 1; col < nCols; ++col)
+        for (int col = 0; col < nCols; ++col)
         {
-            std::cout << std::fixed << std::precision(3) << matrix.GetElement(row, col) << * *;
+            std::cout << std::fixed << std::setprecision(3) << matrix.GetElement(row, col) << " ";
         }
         std::cout << std::endl;
     }
 }
 
-// Function to print the vectors;
+// Function to print vectors
 void qbRT::GTform::PrintVector(const qbVector<double> &inputVector)
 {
     int nRows = inputVector.GetNumDims();
     for (int row = 0; row < nRows; ++row)
     {
-        std::cout << std::fixed << std::precision(3) << inputVector, GetElement(row) << std::endl;
+        std::cout << std::fixed << std::setprecision(3) << inputVector.GetElement(row) << std::endl;
     }
 }
-

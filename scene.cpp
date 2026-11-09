@@ -28,7 +28,7 @@ qbRT::Scene::Scene()
 
     // Construct a test plane
     m_objectList.push_back(std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane()));
-    m_objectList.at(3) -> m_baseColor = qbVector<double>{std::vector<double> {128.0, 128.0, 128.0}};
+    m_objectList.at(3) -> m_baseColor = qbVector<double>{std::vector<double> {0.5, 0.5, 0.5}};
 
     // Define a transform for the plane
     qbRT::GTform planeMatrix;
@@ -56,9 +56,9 @@ qbRT::Scene::Scene()
     m_objectList.at(2) -> SetTransformMatrix(testMatrix3);
 
     // Modify the color
-    m_objectList.at(0) -> m_baseColor = qbVector<double>{std::vector<double>{64.0, 128.0, 200.0}};
-    m_objectList.at(1) -> m_baseColor = qbVector<double>{std::vector<double>{255.0, 128.0, 0.0}};
-    m_objectList.at(2) -> m_baseColor = qbVector<double>{std::vector<double>{255.0, 200.0, 0.0}};
+    m_objectList.at(0) -> m_baseColor = qbVector<double>{std::vector<double>{0.25, 0.5, 0.8}};
+    m_objectList.at(1) -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.5, 0.0}};
+    m_objectList.at(2) -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.8, 0.0}};
 
 
 
@@ -66,7 +66,18 @@ qbRT::Scene::Scene()
     // Construct a test light.
     m_lightList.push_back(std::make_shared<qbRT::PointLight>(qbRT::PointLight()));
     m_lightList.at(0) -> m_location = qbVector<double>{std::vector<double>{5.0, -10.0, -5.0}};
-    m_lightList.at(0) -> m_color = qbVector<double> {std::vector<double>{255.0, 255.0, 255.0}};
+    m_lightList.at(0) -> m_color = qbVector<double> {std::vector<double>{0.0, 0.0, 1.0}};
+
+    m_lightList.push_back(std::make_shared<qbRT::PointLight> (qbRT::PointLight()));
+    m_lightList.at(1) -> m_location = qbVector<double> {std::vector<double> {-5.0, -10.0, -5.0}};
+    m_lightList.at(1) -> m_color = qbVector<double> {std::vector<double> {1.0, 0.0, 0.0}};
+
+    m_lightList.push_back(std::make_shared<qbRT::PointLight> (qbRT::PointLight()));
+    m_lightList.at(2) -> m_location = qbVector<double> {std::vector<double> {0.0, -10.0, -5.0}};
+    m_lightList.at(2) -> m_color = qbVector<double> {std::vector<double> {0.0, 1.0, 0.0}};
+
+
+
 }
 
 // FUnction to perform the rendering.

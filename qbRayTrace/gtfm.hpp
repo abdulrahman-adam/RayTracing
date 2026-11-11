@@ -3,7 +3,7 @@
 #ifndef GTFM_H
 #define GTFM_H
 
-#include "./qbLinAlg/qbMatrix.h"
+#include "../qbLinAlg/qbMatrix.h"
 #include "ray.hpp"
 
 namespace qbRT

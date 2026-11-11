@@ -4,7 +4,7 @@
 #define OBJSPHERE_H
 
 #include "objectbase.hpp"
-#include "gtfm.hpp"
+#include "../gtfm.hpp"
 namespace qbRT
 {
     // heritage of Objectbase

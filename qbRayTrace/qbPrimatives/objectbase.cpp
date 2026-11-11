@@ -19,12 +19,23 @@ void qbRT::ObjectBase::SetTransformMatrix(const qbRT::GTform &transformMatrix)
 {
     m_transformMatrix = transformMatrix;
 }
+
+
+
 // Funcction to test for intersections
 bool qbRT::ObjectBase::TestIntersections(const Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor)
 {
     // This is a base class function and should be overridden by derived classes.
     // It returns false to indicate that no intersection was found.
     return false;
+}
+
+// Fucntion to to assign a material.
+bool qbRT::ObjectBase::AssignMaterial(const std::shared_ptr<qbRT::MaterialBase> &objectMaterial)
+{
+    m_pMaterial = objectMaterial;
+    m_hasMaterial = true;
+    return m_hasMaterial;
 }
 
 //Function to test whether two floating-point numbers are close enough to being equal.

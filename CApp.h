@@ -2,9 +2,9 @@
 #define CAPP_H
 
 #include <SDL2/SDL.h>
-#include "qbImage.hpp"
-#include "scene.hpp"
-#include "camera.hpp"
+#include "./qbRayTrace/qbImage.hpp"
+#include "./qbRayTrace/scene.hpp"
+#include "./qbRayTrace/camera.hpp"
 
 class CApp
 {

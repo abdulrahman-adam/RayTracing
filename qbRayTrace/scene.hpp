@@ -17,9 +17,10 @@ to an image.
 #include <SDL2/SDL.h>
 #include "qbImage.hpp"
 #include "camera.hpp"
-#include "objsphere.hpp"
-#include "objplane.hpp"
-#include "pointlight.hpp"
+#include "./qbPrimatives/objsphere.hpp"
+#include "./qbPrimatives/objplane.hpp"
+#include "./qbLights/pointlight.hpp"
+#include "./qbMaterials/materialbase.hpp"
 
 namespace qbRT
 
@@ -31,6 +32,11 @@ namespace qbRT
         Scene();
         // Function to perform the rendering.
         bool Render(qbImage &outputImage);
+
+        // Function to cast a ray into the scene.
+        bool CastRay( qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase> &closestObject,
+                      qbVector<double> &closestPoint, qbVector<double> &colsestLocalNormal,
+                      qbVector<double> &closestLocalColor);
         // Private functions
         private:
 

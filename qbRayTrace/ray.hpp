@@ -1,7 +1,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "./qbLinAlg/qbVector.h"
+#include "../qbLinAlg/qbVector.h"
 
 namespace qbRT
 {

@@ -20,6 +20,8 @@ to an image.
 #include "./qbPrimatives/objsphere.hpp"
 #include "./qbPrimatives/objplane.hpp"
 #include "./qbLights/pointlight.hpp"
+#include "./qbPrimatives/cylinder.hpp"
+#include "./qbPrimatives/cone.hpp"
 #include "./qbMaterials/materialbase.hpp"
 
 namespace qbRT

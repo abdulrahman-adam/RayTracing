@@ -17,6 +17,12 @@ qbRT::GTform::~GTform()
 
 }
 
+// Construct from three vector.
+qbRT::GTform::GTform(const qbVector<double> &translation, const qbVector<double> &rotation, const qbVector<double> &scale)
+{
+    SetTransform(translation, rotation, scale);
+}
+
 // Construct from a pair of matrices.
 qbRT::GTform::GTform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck)
 {
@@ -78,10 +84,11 @@ void qbRT::GTform::SetTransform( const qbVector<double> &translation,
 
     //Combine to give the final forward transform matrix.
     m_fwdtfm = translationMatrix *
-               scaleMatrix *
+               //scaleMatrix *
                rotationMatrixX *
                rotationMatrixY *
-               rotationMatrixZ;
+               rotationMatrixZ *
+               scaleMatrix;
 
     // Compute the backward transform
     m_bcktfm = m_fwdtfm;

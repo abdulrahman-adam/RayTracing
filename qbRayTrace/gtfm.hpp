@@ -19,6 +19,8 @@ namespace qbRT
             GTform();
             ~GTform();
 
+            // Construct from three vector.
+            GTform(const qbVector<double> &translation, const qbVector<double> &rotation, const qbVector<double> &scale);
             // Construct from a pair of matrices.
             GTform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck);
 

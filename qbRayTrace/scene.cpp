@@ -6,6 +6,8 @@ The scene class implementation . A class to handle information about the scene a
  */
 
 
+#define _USE_MATH_DEFINES   // makes M_PI available (must come before any include)
+#include <cmath>
 #include "scene.hpp"
 #include "./qbMaterials/simplematerial.hpp"
 #include <iostream>
@@ -15,26 +17,21 @@ qbRT::Scene::Scene()
 
 {
     // Create some materials
-    auto testMaterial = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-    auto testMaterial2 = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-    auto testMaterial3 = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+    auto yellowDiffuse = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+    auto blueDiffuse = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
     auto floorMaterial = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
 
 
-    // Setup the mertials.
-    testMaterial -> m_baseColor = qbVector<double>{std::vector<double>{0.25, 0.5, 0.8}};
-    testMaterial -> m_reflectivity = 0.1;
-    testMaterial -> m_shininess = 10.0;
 
-    // testMaterial 2
-    testMaterial2 -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.5, 0.0}};
-    testMaterial2 -> m_reflectivity = 0.75;
-    testMaterial2 -> m_shininess = 10.0;
+    // Blue diffuse material
+    blueDiffuse -> m_baseColor = qbVector<double>{std::vector<double>{0.2, 0.2, 0.8}};
+    blueDiffuse -> m_reflectivity = 0.05;
+    blueDiffuse -> m_shininess = 5.0;
 
-    // testMaterial 3
-    testMaterial3 -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.8, 0.0}};
-    testMaterial3 -> m_reflectivity = 0.25;
-    testMaterial3 -> m_shininess = 10.0;
+    // Yellow diffuse material
+    yellowDiffuse -> m_baseColor = qbVector<double>{std::vector<double>{0.8, 0.8, 0.3}};
+    yellowDiffuse -> m_reflectivity = 0.05;
+    yellowDiffuse -> m_shininess = 5.0;
 
     // Floor material
     floorMaterial -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}};
@@ -45,59 +42,42 @@ qbRT::Scene::Scene()
     qbRT::MaterialBase::m_maxReflectionRays = 3;
 
     //Configure the camera
-    m_camera.SetPosition( qbVector<double>{std::vector<double>{0.0, -10.0, -1.0}} );
+    // m_camera.SetPosition( qbVector<double>{std::vector<double>{0.0, -10.0, -1.0}});
+    m_camera.SetPosition( qbVector<double>{std::vector<double>{3.0, -5.0, -2.0}});
     m_camera.SetLookAt  ( qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}} );
     m_camera.SetUp      ( qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}} );
-    m_camera.SetHorzSize(0.25);
+    m_camera.SetHorzSize(0.75);
     m_camera.SetAspect  (16.0 / 9.0);
     m_camera.UpdateCameraGeometry();
 
-    //Construct a test sphere.
-    m_objectList.push_back(std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere()));
-    m_objectList.push_back(std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere()));
-    m_objectList.push_back(std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere()));
+    // Create and setup some onjects.
+    auto floor = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
+    floor -> SetTransformMatrix(qbRT::GTform { qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}},
+                                               qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+                                               qbVector<double>{std::vector<double>{16.0, 16.0, 1.0}}});
+    floor -> AssignMaterial (floorMaterial);
 
-    // Construct a test plane
-    m_objectList.push_back(std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane()));
-    m_objectList.at(3) -> m_baseColor = qbVector<double>{std::vector<double> {0.5, 0.5, 0.5}};
+    // Cylinder
+    auto cylinder1 = std::make_shared<qbRT::Cylinder> (qbRT::Cylinder());
+    cylinder1 -> SetTransformMatrix(qbRT::GTform { qbVector<double>{std::vector<double>{-1.0, 0.0, 0.0}},
+                                                   qbVector<double>{std::vector<double>{-M_PI / 4.0, 0.0, 0.0}},
+                                                   qbVector<double>{std::vector<double>{0.5, 0.5, 1.0}}});
+    cylinder1 -> AssignMaterial (blueDiffuse);
 
-    // Define a transform for the plane
-    qbRT::GTform planeMatrix;
-    planeMatrix.SetTransform( qbVector<double>{std::vector<double>{0.0, 0.0, 0.75}},
-                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-                              qbVector<double>{std::vector<double>{4.0, 4.0, 1.0}});
-    m_objectList.at(3) -> SetTransformMatrix(planeMatrix);
+    // Cone
+    auto cone1 = std::make_shared<qbRT::Cone> (qbRT::Cone());
+    cone1 -> SetTransformMatrix(qbRT::GTform { qbVector<double>{std::vector<double>{1.0, 0.0, 0.0}},
+                                               qbVector<double>{std::vector<double>{M_PI/ 4.0, 0.0, 0.0}},
+                                               qbVector<double>{std::vector<double>{0.5, 0.5, 1.0}}});
+    cone1 -> AssignMaterial (yellowDiffuse);
+
+
+    // Put this object into the scene
+    m_objectList.push_back(floor);
+    m_objectList.push_back(cylinder1);
+    m_objectList.push_back(cone1);
+   
     
-    // Modify the Sphere
-    qbRT::GTform testMatrix1, testMatrix2, testMatrix3;
-    testMatrix1.SetTransform( qbVector<double>{std::vector<double>{-1.5, 0.0, 0.0}},
-                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-                              qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
-
-    testMatrix2.SetTransform( qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-                              qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
-
-    testMatrix3.SetTransform( qbVector<double>{std::vector<double>{1.5, 0.0, 0.0}},
-                              qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-                              qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}});
-
-    m_objectList.at(0) -> SetTransformMatrix(testMatrix1);
-    m_objectList.at(1) -> SetTransformMatrix(testMatrix2);
-    m_objectList.at(2) -> SetTransformMatrix(testMatrix3);
-
-    // Modify the color
-    m_objectList.at(0) -> m_baseColor = qbVector<double>{std::vector<double>{0.25, 0.5, 0.8}};
-    m_objectList.at(1) -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.5, 0.0}};
-    m_objectList.at(2) -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.8, 0.0}};
-
-    // Assign Materials to objects
-    m_objectList.at(0) -> AssignMaterial(testMaterial3);
-    m_objectList.at(1) -> AssignMaterial(testMaterial);
-    m_objectList.at(2) -> AssignMaterial(testMaterial2);
-    m_objectList.at(3) -> AssignMaterial(floorMaterial);
-
-
     // Construct a test light.
     m_lightList.push_back(std::make_shared<qbRT::PointLight>(qbRT::PointLight()));
     m_lightList.at(0) -> m_location = qbVector<double>{std::vector<double>{5.0, -10.0, -5.0}};

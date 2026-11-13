@@ -76,6 +76,21 @@ bool qbRT::ObjSphere::TestIntersections(const qbRT::Ray &castRay, qbVector<doubl
 
             // Return the base color.
             localColor = m_baseColor;
+
+            // Compute and store (u, v) coordinates for possible later use.
+            double x = poi.GetElement(0);
+            double y = poi.GetElement(1);
+            double z = poi.GetElement(2);
+            double u = atan(sqrtf(pow(x, 2.0) + pow(y, 2.0)) / z);
+            double v = atan(y/x);
+            if (x < 0)
+               v += M_PI;
+
+            u /= M_PI;
+            v /= M_PI;
+
+            m_uvCoords.SetElement(0, u);
+            m_uvCoords.SetElement(1, v);
         }
 
         return true;

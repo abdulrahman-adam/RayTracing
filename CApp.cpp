@@ -16,12 +16,16 @@ bool CApp::OnInit()
         return false;
     }
 
-    pWindow = SDL_CreateWindow("qbRayTracer . Don't forget the subscribe!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_SHOWN);
+    int xSize = 1280;
+    int ySize = 720;
+
+    pWindow = SDL_CreateWindow("qbRayTracer . Don't forget the subscribe!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, xSize, ySize, SDL_WINDOW_SHOWN);
     if (pWindow != NULL)
     {
         pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
         // Initialize the qbImage instance.
-        m_image.Initialize(1280, 720, pRenderer);
+        // m_image.Initialize(1280, 720, pRenderer);
+        m_image.Initialize(xSize, ySize, pRenderer);
         // Set the background color to white.
         SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
         SDL_RenderClear(pRenderer);
@@ -95,6 +99,9 @@ void CApp::OnRender()
 
 void CApp::OnExit()
 {
+    // Free the image texture first, while SDL is still running.
+    m_image.Release();
+
     // Tidy up SDL2 stuff
     SDL_DestroyRenderer(pRenderer);
     SDL_DestroyWindow(pWindow);

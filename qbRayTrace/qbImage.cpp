@@ -185,3 +185,13 @@ void qbImage::ComputeMaxValues()
         }
     }
 }
+
+// Function to free the SDL texture. Must be called before the renderer is destroyed and SDL_Quit().
+void qbImage::Release()
+{
+    if (m_pTexture != NULL)
+    {
+        SDL_DestroyTexture(m_pTexture);
+        m_pTexture = NULL;
+    }
+}

@@ -23,6 +23,9 @@ class qbImage
         // Function to return the image of display
         void Display();
 
+        // Function to free the SDL texture (call before SDL_Quit).
+        void Release();
+
         // Function to return the dimentions of the image
         int GetXSize();
         int GetYSize();

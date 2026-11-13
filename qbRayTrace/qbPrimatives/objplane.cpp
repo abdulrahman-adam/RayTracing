@@ -55,6 +55,10 @@ bool qbRT::ObjPlane::TestIntersections( const qbRT::Ray &castRay, qbVector<doubl
 
                 // Return the base color.
                 localColor = m_baseColor;
+
+                // Store the (u, v) coordinates for possible later use.
+                m_uvCoords.SetElement(0, u);
+                m_uvCoords.SetElement(1, v);
                 return true;
             }
             else

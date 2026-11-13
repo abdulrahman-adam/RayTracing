@@ -5,6 +5,8 @@
 #include "./qbRayTrace/qbImage.hpp"
 #include "./qbRayTrace/scene.hpp"
 #include "./qbRayTrace/camera.hpp"
+#include "./qbRayTrace/qbTextures/flat.hpp"
+#include "./qbRayTrace/qbTextures/checker.hpp"
 
 class CApp
 {

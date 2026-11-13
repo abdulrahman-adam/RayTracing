@@ -63,18 +63,18 @@ void qbRT::GTform::SetTransform( const qbVector<double> &translation,
 
     //Rotation matrices.
     rotationMatrixZ.SetElement(0, 0, cos(rotation.GetElement(2)));
-    rotationMatrixZ.SetElement(0, 1, sin(rotation.GetElement(2)));
-    rotationMatrixZ.SetElement(1, 0, -sin(rotation.GetElement(2)));
+    rotationMatrixZ.SetElement(0, 1, -sin(rotation.GetElement(2)));
+    rotationMatrixZ.SetElement(1, 0, sin(rotation.GetElement(2)));
     rotationMatrixZ.SetElement(1, 1, cos(rotation.GetElement(2)));
 
     rotationMatrixY.SetElement(0, 0, cos(rotation.GetElement(1)));
-    rotationMatrixY.SetElement(0, 2, -sin(rotation.GetElement(1)));
-    rotationMatrixY.SetElement(2, 0, sin(rotation.GetElement(1)));
+    rotationMatrixY.SetElement(0, 2, sin(rotation.GetElement(1)));
+    rotationMatrixY.SetElement(2, 0, -sin(rotation.GetElement(1)));
     rotationMatrixY.SetElement(2, 2, cos(rotation.GetElement(1)));
 
     rotationMatrixX.SetElement(1, 1, cos(rotation.GetElement(0)));
-    rotationMatrixX.SetElement(1, 2, sin(rotation.GetElement(0)));
-    rotationMatrixX.SetElement(2, 1, -sin(rotation.GetElement(0)));
+    rotationMatrixX.SetElement(1, 2, -sin(rotation.GetElement(0)));
+    rotationMatrixX.SetElement(2, 1, sin(rotation.GetElement(0)));
     rotationMatrixX.SetElement(2, 2, cos(rotation.GetElement(0)));
 
     //And scale matrix

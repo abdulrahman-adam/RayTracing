@@ -162,6 +162,15 @@ bool qbRT::Cylinder::TestIntersections( const qbRT::Ray &castRay, qbVector<doubl
         // Return the base color.
         localColor = m_baseColor;
 
+        // compute the (u, v) coordinates and store for possible later use.
+        double x = validPOI.GetElement(0);
+        double y = validPOI.GetElement(1);
+        double z = validPOI.GetElement(2);
+        double u = atan2(y, x) / M_PI;
+        double v = z;
+        m_uvCoords.SetElement(0, u);
+        m_uvCoords.SetElement(1, v);
+
         return true;
     }
     else
@@ -184,6 +193,14 @@ bool qbRT::Cylinder::TestIntersections( const qbRT::Ray &castRay, qbVector<doubl
                 
                 // Return the base color.
                 localColor = m_baseColor;
+
+                // compute the (u, v) coordinates and store for possible later use.
+                double x = validPOI.GetElement(0);
+                double y = validPOI.GetElement(1);
+                double z = validPOI.GetElement(2);
+                
+                m_uvCoords.SetElement(0, x);
+                m_uvCoords.SetElement(1, y);
 
                 return true;
             }

@@ -4,6 +4,7 @@
 #ifndef MATERIALBASE_H
 #define MATERIALBASE_H
 
+#include "../qbTextures/texturebase.hpp"
 #include "../qbPrimatives/objectbase.hpp"
 #include "../qbLights/lightbase.hpp"
 #include "../../qbLinAlg/qbVector.h"
@@ -45,11 +46,19 @@ namespace qbRT
                       qbVector<double> &closestIntPoint, qbVector<double> &closestLocalNormal,
                       qbVector<double> &closestLocalColor);
 
+      // Function to assign the texture
+      void AssignTexture(const std::shared_ptr<qbRT::Texture::TextureBase> &inputTexture);
+
       public:
         // Counter for the number of reflection rays.
         inline static int m_maxReflectionRays;
         inline static int m_reflectionRayCount;
 
+      // List of texture assigned to this material.
+      std::vector<std::shared_ptr<qbRT::Texture::TextureBase>> m_textureList;
+
+      // Flag to indicate whether at latest one texture has been assigned.
+      bool m_hasTexture = false;
 
       private:
     };

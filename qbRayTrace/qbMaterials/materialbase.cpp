@@ -161,3 +161,10 @@ bool qbRT::MaterialBase::CastRay(  const qbRT::Ray &castRay, const std::vector<s
 
     return intersectionFound;
 }
+
+// Function to assign a texture
+void qbRT::MaterialBase::AssignTexture(const std::shared_ptr<qbRT::Texture::TextureBase> &inputTexture)
+{
+    m_textureList.push_back(inputTexture);
+    m_hasTexture = true;
+}
